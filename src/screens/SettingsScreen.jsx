@@ -2,15 +2,15 @@ import SectionHeading from "../components/SectionHeading";
 import { useAppModel } from "../lib/app-model";
 
 const TEXT_OPTIONS = [
-  { id: "normal", label: "Normal", description: "Tamaño base" },
-  { id: "grande", label: "Grande", description: "Lectura más cómoda" },
-  { id: "extra", label: "Extra grande", description: "Máxima prioridad a legibilidad" },
+  { id: "normal", label: "Normal", description: "Tamaño estándar" },
+  { id: "grande", label: "Grande", description: "Más cómodo de leer" },
+  { id: "extra", label: "Extra grande", description: "Prioriza la legibilidad" },
 ];
 
 const MOTION_OPTIONS = [
   { id: "suave", label: "Suave", description: "Transiciones cortas" },
-  { id: "calmado", label: "Calmado", description: "Movimiento muy reducido" },
-  { id: "minimo", label: "Mínimo", description: "Casi sin animación" },
+  { id: "calmado", label: "Calmado", description: "Menos movimiento" },
+  { id: "minimo", label: "Mínimo", description: "Casi sin movimiento" },
 ];
 
 function OptionGroup({ title, description, items, value, onChange }) {
@@ -63,7 +63,7 @@ export default function SettingsScreen() {
     }
 
     const utterance = new SpeechSynthesisUtterance(
-      "Netflix Senior Mode. Tu navegación está clara, calmada y lista para usar.",
+      "Netflix Senior Mode. Navegación clara y lista para usar.",
     );
     utterance.lang = "es-ES";
     utterance.rate = 0.95;
@@ -75,15 +75,15 @@ export default function SettingsScreen() {
     <>
       <section className="panel-surface">
         <SectionHeading
-          eyebrow="Configuración senior"
-          title="Ajustes visibles y directos"
-          description="Todo lo importante está aquí: tamaño, movimiento, subtítulos y guía por voz."
+          eyebrow="Configuración"
+          title="Ajustes claros"
+          description="Texto, movimiento, subtítulos y voz en un solo lugar."
         />
       </section>
 
       <OptionGroup
         title="Tamaño de texto"
-        description="Cambia la escala general de lectura en toda la interfaz."
+        description="Ajusta la escala de lectura en toda la interfaz."
         items={TEXT_OPTIONS}
         value={app.settings.textScale}
         onChange={(value) => app.updateSettings({ textScale: value })}
@@ -91,7 +91,7 @@ export default function SettingsScreen() {
 
       <OptionGroup
         title="Nivel de animación"
-        description="Reduce movimiento para una experiencia más tranquila."
+        description="Reduce el movimiento para una experiencia más tranquila."
         items={MOTION_OPTIONS}
         value={app.settings.motionLevel}
         onChange={(value) => app.updateSettings({ motionLevel: value })}
@@ -99,13 +99,13 @@ export default function SettingsScreen() {
 
       <section className="settings-group">
         <SectionHeading
-          title="Ayudas activables"
-          description="Pensadas para lectura, orientación y control sin depender de otra persona."
+          title="Ayudas"
+          description="Opciones para leer, orientarte y controlar la app con más facilidad."
         />
         <div className="toggle-grid">
           <ToggleRow
             title="Subtítulos automáticos"
-            description="Activa subtítulos al entrar a reproducción."
+            description="Activa subtítulos al empezar a reproducir."
             checked={app.settings.autoSubtitles}
             onChange={() =>
               app.updateSettings({ autoSubtitles: !app.settings.autoSubtitles })
@@ -118,7 +118,7 @@ export default function SettingsScreen() {
           />
           <ToggleRow
             title="Lectura por voz"
-            description="Lee encabezados y botones cuando navegas con teclado."
+            description="Lee encabezados y botones al navegar con teclado."
             checked={app.settings.voiceGuidance}
             onChange={() =>
               app.updateSettings({ voiceGuidance: !app.settings.voiceGuidance })
@@ -142,17 +142,17 @@ export default function SettingsScreen() {
           type="button"
           className="ghost-button"
           onClick={app.clearSearchHistory}
-          data-voice="Borrar historial de búsqueda"
+          data-voice="Borrar búsquedas recientes"
         >
-          Borrar historial de búsqueda
+          Borrar búsquedas recientes
         </button>
         <button
           type="button"
           className="ghost-button"
           onClick={app.resetExperience}
-          data-voice="Restablecer experiencia"
+          data-voice="Borrar datos guardados"
         >
-          Restablecer experiencia
+          Borrar datos guardados
         </button>
       </section>
     </>

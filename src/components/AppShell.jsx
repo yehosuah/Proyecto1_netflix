@@ -10,39 +10,40 @@ import {
   Shapes,
 } from "lucide-react";
 import { HELP_TIPS } from "../data/catalog";
+import { formatProgress } from "../lib/copy";
 import { useAppModel } from "../lib/app-model";
 import { useVoiceGuidance } from "../hooks/useVoiceGuidance";
 
 const ROUTE_META = [
   {
     match: (path) => path === "/",
-    title: "Inicio simplificado",
-    description: "Tus caminos principales con menos ruido y más control.",
+    title: "Inicio",
+    description: "Tus opciones principales, sin ruido.",
   },
   {
     match: (path) => path.startsWith("/categorias"),
-    title: "Categorías claras",
-    description: "Explora géneros, idioma y selecciones fáciles de reconocer.",
+    title: "Categorías",
+    description: "Explora por tema, idioma o tipo.",
   },
   {
     match: (path) => path.startsWith("/buscar"),
-    title: "Búsqueda asistida",
-    description: "Encuentra por nombre, idioma o género sin pasos extra.",
+    title: "Buscar",
+    description: "Encuentra por título, idioma o género.",
   },
   {
     match: (path) => path.startsWith("/configuracion"),
-    title: "Configuración senior",
-    description: "Ajusta texto, movimiento, subtítulos y lectura por voz.",
+    title: "Configuración",
+    description: "Ajusta texto, movimiento, subtítulos y voz.",
   },
   {
     match: (path) => path.startsWith("/detalle"),
-    title: "Detalle del contenido",
-    description: "Título grande, contexto claro y acciones principales al frente.",
+    title: "Detalle",
+    description: "Resumen claro y acciones principales al frente.",
   },
   {
     match: (path) => path.startsWith("/reproducir"),
-    title: "Reproducción guiada",
-    description: "Control simple de pausa, audio y subtítulos.",
+    title: "Reproducción",
+    description: "Controles simples para pausar, audio y subtítulos.",
   },
 ];
 
@@ -76,8 +77,8 @@ function HelpPanel({ onClose }) {
         <div className="section-heading">
           <div>
             <p className="section-eyebrow">Ayuda</p>
-            <h2>Cómo moverte sin perderte</h2>
-            <p>Atajos simples basados en objetivos reales del proyecto.</p>
+            <h2>Cómo usar la app</h2>
+            <p>Atajos y acciones útiles para encontrar algo rápido.</p>
           </div>
           <button
             type="button"
@@ -126,94 +127,100 @@ export default function AppShell() {
         Saltar al contenido principal
       </a>
       <div className="app-shell">
-      <aside className="sidebar">
-        <div className="brand-card">
-          <img src={app.logoImage} alt="Netflix Senior Mode" />
-          <div className="brand-copy">
-            <p className="section-eyebrow">Modo senior activo</p>
-            <h1>Netflix Senior Mode</h1>
-            <p>Menos estímulo. Más lectura. Más control sobre cada paso.</p>
+        <aside className="sidebar">
+          <div className="sidebar-logo-anchor">
+            <img
+              className="sidebar-logo-anchor__img"
+              src={app.logoImage}
+              alt="Netflix Senior Mode"
+            />
           </div>
-        </div>
-
-        <nav className="sidebar-nav" aria-label="Navegación principal">
-          <NavigationItems />
-        </nav>
-
-        <div className="support-panel">
-          {app.lastOpenedTitle ? (
-            <button
-              type="button"
-              className="resume-card"
-              onClick={() => navigate(`/detalle/${app.lastOpenedTitle.id}`)}
-              data-voice={`Volver a ${app.lastOpenedTitle.title}`}
-            >
-              <div>
-                <p className="section-eyebrow">Último título abierto</p>
-                <strong>{app.lastOpenedTitle.title}</strong>
-                <span>
-                  {app.lastOpenedTitle.progress > 0
-                    ? `${Math.round(app.lastOpenedTitle.progress * 100)}% visto`
-                    : "Aún no iniciado"}
-                </span>
-              </div>
-              <span className="resume-icon" aria-hidden="true">
-                <Play size={16} strokeWidth={2.4} />
-              </span>
-            </button>
-          ) : null}
-          <p className="section-eyebrow">Accesibilidad visible</p>
-          <strong>Subtítulos automáticos</strong>
-          <span>{app.settings.autoSubtitles ? "Activados" : "Desactivados"}</span>
-          <strong>Lectura por voz</strong>
-          <span>{app.settings.voiceGuidance ? "Activa" : "Silenciosa"}</span>
-          <strong>Atajo</strong>
-          <span>
-            <Clock3 size={14} strokeWidth={2.2} /> Presiona <kbd>/</kbd> para buscar
-          </span>
-        </div>
-      </aside>
-
-      <div className="main-column">
-        <header className="topbar">
-          <div className="topbar-copy">
-            {location.pathname !== "/" ? (
-              <button
-                type="button"
-                className="back-button"
-                onClick={handleBack}
-                data-voice="Regresar"
-              >
-                <ArrowLeft size={18} strokeWidth={2.4} />
-                <span>Regresar</span>
-              </button>
-            ) : null}
-            <div>
-              <p className="section-eyebrow">{routeMeta.title}</p>
-              <h2>{routeMeta.description}</h2>
+          <div className="brand-card">
+            <div className="brand-copy">
+              <p className="section-eyebrow">Modo senior activo</p>
+              <h1>Netflix Senior Mode</h1>
+              <p>Menos ruido. Más claridad. Más control.</p>
             </div>
           </div>
-          <button
-            type="button"
-            className="help-button"
-            onClick={() => setHelpOpen(true)}
-            data-voice="Abrir ayuda"
-          >
-            <CircleHelp size={18} strokeWidth={2.2} />
-            <span>Ayuda</span>
-          </button>
-        </header>
 
-        <main className="screen" id="main-content">
-          <Outlet />
-        </main>
+          <nav className="sidebar-nav" aria-label="Navegación principal">
+            <NavigationItems />
+          </nav>
 
-        <nav className="bottom-nav" aria-label="Navegación móvil">
-          <NavigationItems mobile />
-        </nav>
-      </div>
+          <div className="support-panel">
+            {app.lastOpenedTitle ? (
+              <button
+                type="button"
+                className="resume-card"
+                onClick={() => navigate(`/detalle/${app.lastOpenedTitle.id}`)}
+                data-voice={`Volver a ${app.lastOpenedTitle.title}`}
+              >
+                <div>
+                  <p className="section-eyebrow">Último título</p>
+                  <strong>{app.lastOpenedTitle.title}</strong>
+                  <span>
+                    {app.lastOpenedTitle.progress > 0
+                      ? formatProgress(app.lastOpenedTitle.progress)
+                      : "Listo para empezar"}
+                  </span>
+                </div>
+                <span className="resume-icon" aria-hidden="true">
+                  <Play size={16} strokeWidth={2.4} />
+                </span>
+              </button>
+            ) : null}
+            <p className="section-eyebrow">Accesibilidad</p>
+            <strong>Subtítulos automáticos</strong>
+            <span>{app.settings.autoSubtitles ? "Activados" : "Desactivados"}</span>
+            <strong>Lectura por voz</strong>
+            <span>{app.settings.voiceGuidance ? "Activa" : "Desactivada"}</span>
+            <strong>Atajo</strong>
+            <span>
+              <Clock3 size={14} strokeWidth={2.2} /> Presiona <kbd>/</kbd> para buscar
+            </span>
+          </div>
+        </aside>
 
-      {helpOpen ? <HelpPanel onClose={() => setHelpOpen(false)} /> : null}
+        <div className="main-column">
+          <header className="topbar">
+            <div className="topbar-copy">
+              {location.pathname !== "/" ? (
+                <button
+                  type="button"
+                  className="back-button"
+                  onClick={handleBack}
+                  data-voice="Regresar"
+                >
+                  <ArrowLeft size={18} strokeWidth={2.4} />
+                  <span>Regresar</span>
+                </button>
+              ) : null}
+              <div>
+                <p className="section-eyebrow">{routeMeta.title}</p>
+                <h2>{routeMeta.description}</h2>
+              </div>
+            </div>
+            <button
+              type="button"
+              className="help-button"
+              onClick={() => setHelpOpen(true)}
+              data-voice="Abrir ayuda"
+            >
+              <CircleHelp size={18} strokeWidth={2.2} />
+              <span>Ayuda</span>
+            </button>
+          </header>
+
+          <main className="screen" id="main-content">
+            <Outlet />
+          </main>
+
+          <nav className="bottom-nav" aria-label="Navegación móvil">
+            <NavigationItems mobile />
+          </nav>
+        </div>
+
+        {helpOpen ? <HelpPanel onClose={() => setHelpOpen(false)} /> : null}
       </div>
     </>
   );

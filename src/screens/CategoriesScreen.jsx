@@ -2,6 +2,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import PosterCard from "../components/PosterCard";
 import SectionHeading from "../components/SectionHeading";
 import { COLLECTIONS, SCOPE_OPTIONS } from "../data/catalog";
+import { formatCount } from "../lib/copy";
 import { useAppModel } from "../lib/app-model";
 
 function OptionBar({ items, activeId, onChange, label }) {
@@ -13,7 +14,7 @@ function OptionBar({ items, activeId, onChange, label }) {
           type="button"
           className={`option-pill ${activeId === item.id ? "is-active" : ""}`}
           onClick={() => onChange(item.id)}
-          data-voice={`${item.label}. ${item.description ?? ""}`}
+          data-voice={item.description ? `${item.label}. ${item.description}` : item.label}
         >
           {item.label}
         </button>
@@ -62,7 +63,7 @@ export default function CategoriesScreen() {
     <>
       <section className="panel-surface">
         <SectionHeading
-          eyebrow="Categorías en lenguaje simple"
+          eyebrow="Categorías"
           title={selectedCollection.label}
           description={selectedCollection.description}
         />
@@ -83,8 +84,8 @@ export default function CategoriesScreen() {
       <section className="content-section">
         <SectionHeading
           eyebrow="Resultados"
-          title={`${filteredTitles.length} opciones visibles`}
-          description="Todas muestran idioma, duración y subtítulos antes de entrar."
+          title={formatCount(filteredTitles.length, "resultado", "resultados")}
+          description="Todos muestran idioma, duración y subtítulos antes de entrar."
         />
         {filteredTitles.length ? (
           <div className="poster-grid">
@@ -100,8 +101,8 @@ export default function CategoriesScreen() {
         ) : (
           <div className="empty-state empty-state--text">
             <div>
-              <h3>No encontramos títulos con ese filtro</h3>
-              <p>Prueba otra combinación de categoría o tipo de contenido.</p>
+              <h3>No hay resultados</h3>
+              <p>Prueba otra categoría o cambia el tipo de contenido.</p>
             </div>
           </div>
         )}

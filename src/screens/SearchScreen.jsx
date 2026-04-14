@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import PosterCard from "../components/PosterCard";
 import SectionHeading from "../components/SectionHeading";
 import { SUGGESTED_SEARCHES } from "../data/catalog";
+import { formatCount, LIST_LABEL } from "../lib/copy";
 import { useAppModel } from "../lib/app-model";
 
 const FILTERS = [
@@ -11,7 +12,7 @@ const FILTERS = [
   { id: "espanol", label: "En español" },
   { id: "historias-reales", label: "Historias reales" },
   { id: "documentales", label: "Documentales" },
-  { id: "favoritos", label: "Favoritos" },
+  { id: "favoritos", label: LIST_LABEL },
 ];
 
 function matchesFilter(title, filter) {
@@ -109,9 +110,9 @@ export default function SearchScreen() {
     <>
       <section className="search-panel">
         <SectionHeading
-          eyebrow="Búsqueda asistida"
-          title="Escribe un nombre, idioma o categoría"
-          description="También puedes tocar una búsqueda reciente o usar filtros rápidos."
+          eyebrow="Buscar"
+          title="Busca por título, idioma o género"
+          description="También puedes usar sugerencias, filtros y búsquedas recientes."
         />
         <label className="search-field" data-voice="Campo de búsqueda">
           <Search size={22} strokeWidth={2.2} />
@@ -125,7 +126,7 @@ export default function SearchScreen() {
                 handleQuerySubmit();
               }
             }}
-            placeholder="Ejemplo: español, comedia, Roma"
+            placeholder="Ej.: Roma, español o comedia"
             aria-label="Buscar contenido"
           />
           {query ? (
@@ -140,7 +141,7 @@ export default function SearchScreen() {
           ) : null}
         </label>
         <div className="history-wrap">
-          <span className="section-eyebrow">Búsqueda rápida</span>
+          <span className="section-eyebrow">Sugerencias</span>
           <div className="history-list">
             {SUGGESTED_SEARCHES.map((item) => (
               <button
@@ -188,7 +189,7 @@ export default function SearchScreen() {
                 </button>
               ))
             ) : (
-              <span className="history-empty">Aún no has buscado nada.</span>
+              <span className="history-empty">Aún no hay búsquedas recientes.</span>
             )}
           </div>
         </div>
@@ -196,9 +197,9 @@ export default function SearchScreen() {
 
       <section className="content-section">
         <SectionHeading
-          eyebrow="Resultados visibles"
-          title={`${visibleTitles.length} coincidencias`}
-          description="El resultado se filtra en tiempo real sin bloquear la escritura."
+          eyebrow="Resultados"
+          title={formatCount(visibleTitles.length, "resultado", "resultados")}
+          description="Los resultados se actualizan mientras escribes."
           action={
             query ? (
               <button
@@ -226,8 +227,8 @@ export default function SearchScreen() {
         ) : (
           <div className="empty-state empty-state--text">
             <div>
-              <h3>No hay coincidencias</h3>
-              <p>Prueba otro término, otro idioma o un filtro distinto.</p>
+              <h3>No encontramos resultados</h3>
+              <p>Prueba otro término o cambia el filtro.</p>
             </div>
             <button
               type="button"
@@ -236,9 +237,9 @@ export default function SearchScreen() {
                 setQuery("español");
                 setActiveFilter("espanol");
               }}
-              data-voice="Probar búsqueda en español"
+              data-voice="Ver resultados en español"
             >
-              Probar en español
+              Ver en español
             </button>
           </div>
         )}

@@ -1,8 +1,10 @@
 import { Bookmark, BookmarkCheck, Sparkles } from "lucide-react";
-
-function formatProgress(progress) {
-  return `${Math.round(progress * 100)}% visto`;
-}
+import {
+  formatProgress,
+  getListActionLabel,
+  getListVoiceLabel,
+  getMediaTypeLabel,
+} from "../lib/copy";
 
 export default function PosterCard({
   title,
@@ -10,7 +12,7 @@ export default function PosterCard({
   onFavoriteToggle,
   compact = false,
 }) {
-  const buttonLabel = `${title.title}. ${title.language}. ${title.duration}.`;
+  const buttonLabel = `${title.title}. ${getMediaTypeLabel(title.mediaType)}. ${title.language}. ${title.duration}.`;
 
   return (
     <article className={`poster-card ${compact ? "poster-card--compact" : ""}`}>
@@ -22,12 +24,12 @@ export default function PosterCard({
       >
         <div
           className="poster-art"
-          style={{ backgroundImage: title.image }}
           aria-hidden="true"
         >
+          <img className="poster-image" src={title.image} alt="" loading="lazy" />
           <div className="poster-overlay">
             <span>{title.year}</span>
-            <span>{title.mediaType}</span>
+            <span>{getMediaTypeLabel(title.mediaType)}</span>
           </div>
           <div className="poster-title-lockup">
             <strong>{title.title}</strong>
@@ -42,7 +44,7 @@ export default function PosterCard({
           <div className="poster-heading">
             <h3>{title.title}</h3>
             {title.progress > 0 ? (
-              <span className="poster-flag">Continuar</span>
+              <span className="poster-flag">En progreso</span>
             ) : (
               <span className="poster-flag poster-flag--soft">Nuevo</span>
             )}
@@ -67,18 +69,14 @@ export default function PosterCard({
           type="button"
           className={`inline-action ${title.isFavorite ? "inline-action--active" : ""}`}
           onClick={() => onFavoriteToggle(title.id)}
-          data-voice={
-            title.isFavorite
-              ? `Quitar ${title.title} de favoritos`
-              : `Agregar ${title.title} a favoritos`
-          }
+          data-voice={getListVoiceLabel(title.title, title.isFavorite)}
         >
           {title.isFavorite ? (
             <BookmarkCheck size={16} strokeWidth={2.1} />
           ) : (
             <Bookmark size={16} strokeWidth={2.1} />
           )}
-          {title.isFavorite ? "Quitar favorito" : "Guardar favorito"}
+          {getListActionLabel(title.isFavorite)}
         </button>
       </div>
     </article>

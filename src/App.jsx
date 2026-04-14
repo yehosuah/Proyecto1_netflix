@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import logoImage from "../logo.jpeg";
 import AppShell from "./components/AppShell";
 import { CATALOG_TITLES } from "./data/catalog";
 import { AppModelProvider } from "./lib/app-model";
@@ -17,6 +16,8 @@ const FONT_SCALE_MAP = {
   grande: "1.1",
   extra: "1.22",
 };
+
+const logoImage = "/logo-readable.jpeg";
 
 function hydrateTitle(baseTitle, storedState) {
   const playback = storedState.playback[baseTitle.id] ?? {};

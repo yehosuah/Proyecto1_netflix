@@ -114,10 +114,13 @@ export default function PlayerScreen() {
   return (
     <>
       <section className="player-screen">
-        <div className="player-stage" style={{ backgroundImage: title.image }}>
+        <div
+          className="player-stage"
+          style={{ backgroundImage: `url(${title.image})` }}
+        >
           <div className="player-mask">
             <SectionHeading
-              eyebrow="Reproducción demo"
+              eyebrow="Reproducción"
               title={title.title}
               description={`${title.language} · ${title.duration} · ${title.subtitles}`}
             />
@@ -166,7 +169,7 @@ export default function PlayerScreen() {
                 ) : (
                   <VolumeX size={18} strokeWidth={2.2} />
                 )}
-                {audioOn ? "Audio activo" : "Audio apagado"}
+                {audioOn ? "Silenciar" : "Activar audio"}
               </button>
               <button
                 type="button"
@@ -181,7 +184,7 @@ export default function PlayerScreen() {
                 }
               >
                 <Captions size={18} strokeWidth={2.2} />
-                {subtitlesEnabled ? "Subtítulos activos" : "Activar subtítulos"}
+                {subtitlesEnabled ? "Desactivar subtítulos" : "Activar subtítulos"}
               </button>
             </div>
             {subtitlesEnabled ? (

@@ -2,6 +2,11 @@ import { Heart, Play } from "lucide-react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import PosterCard from "../components/PosterCard";
 import SectionHeading from "../components/SectionHeading";
+import {
+  getListActionLabel,
+  getListVoiceLabel,
+  getMediaTypeLabel,
+} from "../lib/copy";
 import { useAppModel } from "../lib/app-model";
 
 export default function DetailScreen() {
@@ -27,16 +32,19 @@ export default function DetailScreen() {
   return (
     <>
       <section className="detail-hero">
-        <div className="detail-art" style={{ backgroundImage: title.image }}>
+        <div
+          className="detail-art"
+          style={{ backgroundImage: `url(${title.image})` }}
+        >
           <div className="detail-art-overlay">
-            <span>{title.mediaType}</span>
+            <span>{getMediaTypeLabel(title.mediaType)}</span>
             <span>{title.year}</span>
             <span>{title.category}</span>
           </div>
         </div>
 
         <div className="detail-copy">
-          <p className="section-eyebrow">Pantalla de detalle</p>
+          <p className="section-eyebrow">Detalle</p>
           <h1>{title.title}</h1>
           <p className="detail-lead">{title.synopsis}</p>
           <div className="tag-row">
@@ -58,14 +66,10 @@ export default function DetailScreen() {
               type="button"
               className={`secondary-button ${title.isFavorite ? "secondary-button--active" : ""}`}
               onClick={() => app.toggleFavorite(title.id)}
-              data-voice={
-                title.isFavorite
-                  ? `Quitar ${title.title} de favoritos`
-                  : `Agregar ${title.title} a favoritos`
-              }
+              data-voice={getListVoiceLabel(title.title, title.isFavorite)}
             >
               <Heart size={18} strokeWidth={2.2} />
-              {title.isFavorite ? "Quitar favorito" : "Agregar a favoritos"}
+              {getListActionLabel(title.isFavorite)}
             </button>
           </div>
           <div className="detail-grid">
@@ -74,12 +78,12 @@ export default function DetailScreen() {
               <p>{title.reason}</p>
             </div>
             <div className="detail-block">
-              <h3>Información rápida</h3>
+              <h3>Resumen</h3>
               <ul>
                 <li>Género: {title.genre}</li>
                 <li>Idioma: {title.language}</li>
                 <li>Subtítulos: {title.subtitles}</li>
-                <li>Estado: {title.progress > 0 ? "Ya empezaste a verlo" : "Aún no iniciado"}</li>
+                <li>Estado: {title.progress > 0 ? "En progreso" : "Listo para empezar"}</li>
               </ul>
             </div>
           </div>
@@ -88,9 +92,9 @@ export default function DetailScreen() {
 
       <section className="content-section">
         <SectionHeading
-          eyebrow="Seguir explorando"
-          title="Opciones parecidas"
-          description="Relacionadas por tema o por la misma colección simplificada."
+          eyebrow="Más para ver"
+          title="Títulos parecidos"
+          description="Opciones cercanas por tema o colección."
         />
         <div className="poster-grid">
           {relatedTitles.map((item) => (
